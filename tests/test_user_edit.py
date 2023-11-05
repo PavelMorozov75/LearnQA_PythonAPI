@@ -2,8 +2,13 @@ from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertion
 import time
+import allure
 
+@allure.epic("Задача по расстановке тегов allure")
+@allure.suite("Тесты на редактирование данных пользователя")
 class TestUserEdit(BaseCase):
+    @allure.tag("API")
+    @allure.description("успешное редактирование данных только что созданного авторизованного пользователя")
     def test_edit_just_created_user(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -46,6 +51,8 @@ class TestUserEdit(BaseCase):
                                             'lastName', last_name,
                                             "Wrong name of the user after edit")
 
+    @allure.tag("API")
+    @allure.description("не успешное редактирование данных неавторизованного пользователя")
     def test_edit_unauthorized_user(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -82,6 +89,10 @@ class TestUserEdit(BaseCase):
                                             'firstName',first_name,
                                             "Wrong name of the user after edit")
 
+    @allure.tag("API")
+    @allure.description("не успешное редактирование данных неавторизаванного пользователя при указании регистрационных"
+                        ""
+                        " данных другого авторизованного пользователя")
     def test_authorized_user_edit_another_user(self):
         # REGISTER1
         register_data1 = self.prepare_registration_data()
@@ -140,6 +151,8 @@ class TestUserEdit(BaseCase):
                                               'firstName', first_name1,
                                               "Wrong name of the user after edit")
 
+    @allure.tag("API")
+    @allure.description("не успешное редактирование данных пользователя: изменение email на новый без символа @")
     def test_edit_email_new_email_without_at(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -179,6 +192,8 @@ class TestUserEdit(BaseCase):
                                             'email', email,
                                             "Wrong email after edit")
 
+    @allure.tag("API")
+    @allure.description("не успешное редактирование пользователя, новое имя длиной в 1 символ")
     def test_edit_firstname_new_name_is_too_short(self):
         # REGISTER
         register_data = self.prepare_registration_data()
