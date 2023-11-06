@@ -1,5 +1,5 @@
 import requests
-from lib.logger import Logger
+from lib.logger import logger
 import allure
 from environment import ENV_OBJECT
 
@@ -34,7 +34,7 @@ class MyRequests():
         if cookies is None:
             cookies = {}
 
-        Logger.add_request(url, data, headers, cookies, method)
+        logger.add_request(url, data, headers, cookies, method)
 
         if method == 'GET':
             response = requests.get(url, params=data, headers=headers, cookies=cookies)
@@ -47,6 +47,6 @@ class MyRequests():
         else:
             raise Exception(f"Bad Http method {method} was received")
 
-        Logger.add_response(response)
+        logger.add_response(response)
 
         return response
