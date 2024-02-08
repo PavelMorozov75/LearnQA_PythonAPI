@@ -1,9 +1,15 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertion
+import time
+import allure
+import pytest
 
-
+@allure.epic("Задача по расстановке тегов allure")
+@allure.suite("Тесты на удаление пользователя")
 class TestUserDelete(BaseCase):
+    @allure.tag("API")
+    @allure.description("неуспешное удаление пользователя id= 2")
     def test_delete_user_2(self):
 
         #LOGIN
@@ -34,6 +40,9 @@ class TestUserDelete(BaseCase):
                                             "expected email don't exist, presumably "
                                             "the user has been deleted")
 
+    @pytest.mark.smoke
+    @allure.tag("API")
+    @allure.description("успешное удаление авторизованного пользователя")
     def test_successful_deletion_of_an_authorized_user(self):
         # REGISTER1
         register_data = self.prepare_registration_data()
@@ -69,6 +78,8 @@ class TestUserDelete(BaseCase):
         #проверим, что пользователь удален и не доступен к получению
         Assertion.assert_code_status(response4, 404)
 
+    @allure.tag("API")
+    @allure.description("удаление неаторизованного пользователя при указание регистрационных данных другого пользователя")
     def test_deleting_another_user(self):
         # REGISTER1
         register_data1 = self.prepare_registration_data()
@@ -91,7 +102,7 @@ class TestUserDelete(BaseCase):
         token1 = self.get_header(responce2, 'x-csrf-token')
 
         # REGISTER2
-
+        time.sleep(1)
         register_data2 = self.prepare_registration_data()
         response3 = MyRequests.post("/user/", data=register_data2)
         Assertion.assert_code_status(response1, 200)

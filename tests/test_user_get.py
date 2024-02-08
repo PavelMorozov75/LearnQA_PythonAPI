@@ -1,8 +1,13 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertion
+import allure
 
+@allure.epic("Задача по расстановке тегов allure")
+@allure.suite("Тесты на получение данных пользователя пользователя")
 class TestUserGet(BaseCase):
+    @allure.tag("API")
+    @allure.description("неуспешное получение даннх пользователя без авторизации")
     def test_get_user_details_not_auth(self):
         response = MyRequests.get("/user/2")
         Assertion.assert_json_has_key(response, "username")
@@ -10,6 +15,8 @@ class TestUserGet(BaseCase):
         Assertion.assert_json_has_not_key(response, "firstName")
         Assertion.assert_json_has_not_key(response, "lastName")
 
+    @allure.tag("API")
+    @allure.description("успешное получение даннх авторизованного пользователя")
     def test_get_user_details_auth_as_same_user(self):
         data = {
             'email': 'vinkotov@example.com',
@@ -26,6 +33,8 @@ class TestUserGet(BaseCase):
         expected_fields = ["username", "email", "firstName", "lastName"]
         Assertion.assert_json_has_keys(response2, expected_fields)
 
+    @allure.tag("API")
+    @allure.description("неуспешное получение даннх неавторизованного пользователя другим но авторизованным пользователем")
     def test_get_data_from_another_user(self):
         #создание первого пользователя
         data_user_1 = self.prepare_registration_data()
